@@ -58,8 +58,8 @@ Pluginul utilizează [versiunea 8 a API-ului ANAF](https://static.anaf.ro/static
 ### 1. Ce pluginuri de facturare sunt compatibile?
 Pluginul este compatibil cu următoarele pluginuri de facturare:
 - Facturare Persoană Fizică sau Juridică
-- Romanian Billing Fields
 - SmartBill - Facturare și Gestiune
+- Romanian Billing Fields
 
 ### 2. Ce fac dacă API-ul ANAF este în mentenanță?
 Dacă API-ul ANAF este în mentenanță, completarea automată nu va fi disponibilă și vei primi un mesaj în acest sens. Poți încerca din nou mai târziu.
