@@ -14,9 +14,9 @@ class ANAF_API {
     }
 
     public function get_company_data(WP_REST_Request $request) {
-        // if (!wp_verify_nonce($request->get_header('X-WP-Nonce'), 'wp_rest')) {
-        //     return new WP_REST_Response(['message' => __('The nonce is invalid.', 'send-data')]);
-        // }
+        if (!wp_verify_nonce($request->get_header('X-WP-Nonce'), 'wp_rest')) {
+            return new WP_REST_Response(['message' => __('The nonce is invalid.', 'send-data')]);
+        }
 
         static $lastRequest;
         $maxRequestsPerMin = 20;
