@@ -21,14 +21,14 @@ class Admin_Settings_Page {
 
         add_settings_section(
             'facturare_anaf_settings_section',
-            __('Selectați modulul de facturare', 'facturare-anaf-plugin'),
+            __('Selectați modulul de facturare', 'facturare-anaf-by-mihai'),
             null,
             'facturare_anaf_settings'
         );
 
         add_settings_field(
             'facturare_anaf_module_field',
-            __('Modul de facturare', 'facturare-anaf-plugin'),
+            __('Modul de facturare', 'facturare-anaf-by-mihai'),
             array($this, 'render_module_field'),
             'facturare_anaf_settings',
             'facturare_anaf_settings_section'
@@ -50,7 +50,7 @@ class Admin_Settings_Page {
     public function settings_page() {
         ?>
         <div class="wrap">
-            <h1><?php _e('Setări Facturare ANAF', 'facturare-anaf-plugin'); ?></h1>
+            <h1><?php esc_html_e('Setări Facturare ANAF', 'facturare-anaf-by-mihai'); ?></h1>
             <form action="options.php" method="post">
                 <?php
                 settings_fields('facturare_anaf_settings_group');

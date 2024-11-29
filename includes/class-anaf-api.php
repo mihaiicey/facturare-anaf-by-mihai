@@ -15,7 +15,7 @@ class ANAF_API {
 
     public function get_company_data(WP_REST_Request $request) {
         if (!wp_verify_nonce($request->get_header('X-WP-Nonce'), 'wp_rest')) {
-            return new WP_REST_Response(['message' => __('The nonce is invalid.', 'send-data')]);
+            return new WP_REST_Response(['message' => __('The nonce is invalid.', 'facturare-anaf-by-mihai')]);
         }
 
         static $lastRequest;
@@ -29,31 +29,33 @@ class ANAF_API {
         }
         $lastRequest = microtime(true);
 
-        $cui = $_GET['cui'];
-        $data = date("Y-m-d");
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://webservicesp.anaf.ro/PlatitorTvaRest/api/' . ANAF_API_VERSION . '/ws/tva',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => '[{"cui": "' . $cui . '", "data": "' . $data . '"}]',
-            CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json'
+        $cui = isset($_GET['cui']) ? sanitize_text_field(wp_unslash($_GET['cui'])) : '';
+        if (empty($cui)) {
+            return new WP_REST_Response(['message' => __('CUI-ul este invalid sau lipsă.', 'facturare-anaf-by-mihai')]);
+        }
+
+        $data = gmdate("Y-m-d");
+        
+        $response = wp_remote_post('https://webservicesp.anaf.ro/PlatitorTvaRest/api/' . ANAF_API_VERSION . '/ws/tva', array(
+            'body'    => wp_json_encode(array(array('cui' => $cui, 'data' => $data))),
+            'headers' => array(
+                'Content-Type' => 'application/json'
             ),
+            'timeout' => 10
         ));
 
-        $response = curl_exec($curl);
-        curl_close($curl);
-        $rsp = json_decode($response);
-        // Verificăm dacă răspunsul conține pagina de mentenanță
-        if (strpos($response, '<title>Mentenanta sistem</title>') !== false) {
-            return new WP_REST_Response(['message' => __('Serviciul ANAF este momentan în mentenanță. Încercați din nou mai târziu.', 'send-data')]);
+        if (is_wp_error($response)) {
+            return new WP_REST_Response(['message' => __('Eroare la conectarea la API-ul ANAF.', 'facturare-anaf-by-mihai')]);
         }
+
+        $body = wp_remote_retrieve_body($response);
+        $rsp = json_decode($body);
+
+        // Verificăm dacă răspunsul conține pagina de mentenanță
+        if (strpos($body, '<title>Mentenanta sistem</title>') !== false) {
+            return new WP_REST_Response(['message' => __('Serviciul ANAF este momentan în mentenanță. Încercați din nou mai târziu.', 'facturare-anaf-by-mihai')]);
+        }
+
         if (empty($rsp->found)) {
             return new WP_REST_Response(false);
         } else {

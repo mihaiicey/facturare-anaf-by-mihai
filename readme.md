@@ -1,12 +1,12 @@
-# Facturare ANAF Plugin
+# Facturare ANAF by Mihai
 
 **Contributors**: Mihai Ciufudean (mihaidev.ro / mihai@icey.ro)
 
-**Tags**: ANAF, SmartBill, Facturare, Romanian Billing Fields, WooCommerce, Completare Automată, CUI
+**Tags**: ANAF, Facturare Persoană Fizică sau Juridică, Smartbill, Romanian Billing Fields
 
 **Requires at least**: 5.0
 
-**Tested up to**: 6.3
+**Tested up to**: 6.7.0
 
 **Stable tag**: 1.0.0
 
